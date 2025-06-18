@@ -7,32 +7,35 @@ on:
     branches:
       - main
 
-# The jobs to carry out
+# A single job called "build-and-deploy"
 jobs:
   build-and-deploy:
-    # Run on the latest version of Ubuntu
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+    # Step 1: Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout
       uses: actions/checkout@v4
-      # We need to fetch all history and tags for ghp-import
-      with:
-        fetch-depth: 0
 
+    # Step 2: Set up Python so we can use pip
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        python-version: '3.11'
 
+    # Step 3: Install all the Python libraries listed in requirements.txt
     - name: Install dependencies
       run: |
-        pip install -U jupyter-book ghp-import
+        pip install -r requirements.txt
 
+    # Step 4: Build the Jupyter Book
     - name: Build the book
       run: |
         jupyter-book build .
 
+    # Step 5: Use a special tool to push the built HTML to the gh-pages branch
     - name: Deploy the book
       run: |
         ghp-import -n -p -f _build/html
