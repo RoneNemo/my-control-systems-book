@@ -1,3 +1,6 @@
 jupyter-book
-matplotlib
+ghp-import
+control
 numpy
+matplotlib
+scipy
